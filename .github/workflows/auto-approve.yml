@@ -1,0 +1,44 @@
+name: Auto-approve Pull Requests
+
+on:
+  pull_request:
+    branches:
+      - 'main'
+
+jobs:
+  auto-approve:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Check if PR title matches branch naming convention
+      run: |
+        branch_name=$(echo ${GITHUB_REF#refs/heads/})
+        if [[ $branch_name == feature/* || $branch_name == hotfix/* || $branch_name == bugfix/* ]]; then
+          echo "::set-output name=approve::true"
+        else
+          echo "::set-output name=approve::false"
+        fi
+      id: check_branch
+
+    - name: Auto-approve if branch matches naming convention
+      if: steps.check_branch.outputs.approve == 'true'
+      uses: actions/github-script@0.9.0
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const { data: pullRequest } = await github.pulls.get({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: context.issue.number
+          });
+          await github.pulls.createReview({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: context.issue.number,
+            event: 'APPROVE',
+            body: 'Automatic approval of pull request based on branch naming convention.'
+          });
+
