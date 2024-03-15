@@ -1,10 +1,10 @@
 import ProductCard, { ProductCardProps } from "../ProductCard";
 
-export type Products = {
+export type ProductsProps = {
     products: ProductCardProps[];
 }
 
-const Products = ({ products }: Products) => {
+const Products = ({ products }: ProductsProps) => {
     return (
         <div className="flex flex-wrap justify-center gap-[50px]">
             {products.map(product => (
