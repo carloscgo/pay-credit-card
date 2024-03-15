@@ -10,10 +10,10 @@ const ProductCard = ({
     image,
 }: ProductCardProps) => {
     return (
-
-
         <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow ">
-            <img className="p-8 rounded-t-lg" src={image} alt={name} />
+            <div className="w-100 h-[300px]">
+                <img className="p-8 rounded-t-lg m-auto image-product" src={image} alt={name} />
+            </div>
 
             <div className="px-5 pb-5">
                 <a href="#">

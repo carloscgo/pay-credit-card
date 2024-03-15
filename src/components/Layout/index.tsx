@@ -1,61 +1,14 @@
+import useGetProducts from "../../hooks/useGetProducts";
 import routes, { Link, Route, Routes } from "../../utils/routes";
 import Products from "../Products";
 
-// MOCK
-const products = [
-    {
-        name: 'Apple Watch Series 7 GPS, Aluminium Case, Starlight Sport',
-        image: 'https://flowbite.com/docs/images/products/apple-watch.png',
-        price: 599,
-    },
-    {
-        name: 'Apple Watch Series 7 GPS, Aluminium Case, Starlight Sport',
-        image: 'https://flowbite.com/docs/images/products/apple-watch.png',
-        price: 599,
-    },
-    {
-        name: 'Apple Watch Series 7 GPS, Aluminium Case, Starlight Sport',
-        image: 'https://flowbite.com/docs/images/products/apple-watch.png',
-        price: 599,
-    },
-    {
-        name: 'Apple Watch Series 7 GPS, Aluminium Case, Starlight Sport',
-        image: 'https://flowbite.com/docs/images/products/apple-watch.png',
-        price: 599,
-    },
-    {
-        name: 'Apple Watch Series 7 GPS, Aluminium Case, Starlight Sport',
-        image: 'https://flowbite.com/docs/images/products/apple-watch.png',
-        price: 599,
-    },
-    {
-        name: 'Apple Watch Series 7 GPS, Aluminium Case, Starlight Sport',
-        image: 'https://flowbite.com/docs/images/products/apple-watch.png',
-        price: 599,
-    },
-    {
-        name: 'Apple Watch Series 7 GPS, Aluminium Case, Starlight Sport',
-        image: 'https://flowbite.com/docs/images/products/apple-watch.png',
-        price: 599,
-    },
-    {
-        name: 'Apple Watch Series 7 GPS, Aluminium Case, Starlight Sport',
-        image: 'https://flowbite.com/docs/images/products/apple-watch.png',
-        price: 599,
-    },
-    {
-        name: 'Apple Watch Series 7 GPS, Aluminium Case, Starlight Sport',
-        image: 'https://flowbite.com/docs/images/products/apple-watch.png',
-        price: 599,
-    },
-    {
-        name: 'Apple Watch Series 7 GPS, Aluminium Case, Starlight Sport',
-        image: 'https://flowbite.com/docs/images/products/apple-watch.png',
-        price: 599,
-    },
-];
-
 const Layout = () => {
+    const {
+        loading,
+        error,
+        products,
+    } = useGetProducts();
+
     return (
         <div className="backdrop flex">
             <div className="back-layer bg-gray-200 text-blue-700">
