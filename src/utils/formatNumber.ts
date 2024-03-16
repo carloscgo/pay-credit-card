@@ -1,10 +1,10 @@
 const formatNumber = (value: number) => {
-    const formatter = new Intl.NumberFormat('en-US', { 
-        style: 'currency',
-        currency: 'USD',
-    });
+  const formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  })
 
-    return formatter.format(value);
-};
+  return formatter.format(value)
+}
 
-export default formatNumber;
+export default formatNumber

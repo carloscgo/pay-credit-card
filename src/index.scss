@@ -5,41 +5,38 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 
 :root {
-  font-family: "Inter", sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --tw-scrollbar-thumb: #a0aec0;
+}
+
+body {
+  overflow: hidden;
 }
 
 body * {
-  font-family: "Inter", sans-serif;
-  font-optical-sizing: auto;
+  font-family: 'Inter', sans-serif;
 }
 
-.backdrop {
-  position: relative;
-  width: 100%;
-  height: 100vh;
+.scrollbar-rounded {
+  scrollbar-width: thin;
+  scrollbar-color: var(--tw-scrollbar-thumb) transparent;
 }
 
-.back-layer {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+.scrollbar-rounded::-webkit-scrollbar {
+  width: 12px;
 }
 
-.front-layer {
-  position: absolute;
-  top: 80px;
-  left: 0;
-  width: 100%;
-  min-height: calc(100% - 80px);
-  max-height: max-content;
+.scrollbar-rounded::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-rounded::-webkit-scrollbar-thumb {
+  background-color: var(--tw-scrollbar-thumb);
+  border-radius: 1rem;
+  border: 3px solid transparent;
+}
+
+.creditCard.backIsVisible {
+  transform: rotateY(-180deg);
 }
 
 .button {
@@ -52,12 +49,6 @@ body * {
 
 .button:hover {
   text-decoration: underline;
-}
-
-.title {
-  margin: 20px;
-  font-size: 24px;
-  font-weight: 500;
 }
 
 .image-product {
