@@ -6,9 +6,9 @@ import Products from '../Products'
 import Payment from '../Payment'
 import Loading from '../Loading'
 import ErrorMessage from '../ErrorMessage'
+import NavBar from '../NavBar'
 
 const Layout = () => {
-  const [activeContent, setActiveContent] = useState('home')
   const [error, setError] = useState('')
 
   const { loading: loadingProducts, error: errorProducts } = useGetProducts()
@@ -29,46 +29,17 @@ const Layout = () => {
       <ErrorMessage errorMessage={error} onClose={handleCloseError} />
 
       <div className="relative min-h-screen bg-gray-100">
-        <div className="relative z-10 p-4 bg-white shadow-md flex items-center justify-between">
-          <h4 className="text-gray-700 text-4xl font-semibold">Shop Payment</h4>
+        <div className="relative z-20 p-4 bg-white shadow-md flex items-center justify-between md:justify-start">
+          <h4 className="text-gray-700 lg:text-3xl md:text-2xl font-semibold mr-10">
+            <Link to={routes.home}>Shop Payment</Link>
+          </h4>
 
-          <ul className="flex items-center space-x-4 mx-10 gap-10">
-            <li
-              className={`flex items-center cursor-pointer ${
-                activeContent === 'home' ? 'text-blue-500' : ''
-              }`}
-              onClick={() => setActiveContent('home')}
-            >
-              <Link to={routes.home} className="button">
-                Home
-              </Link>
-            </li>
-            <li
-              className={`flex items-center cursor-pointer ${
-                activeContent === 'products' ? 'text-blue-500' : ''
-              }`}
-              onClick={() => setActiveContent('products')}
-            >
-              <Link to={routes.products} className="button">
-                Products
-              </Link>
-            </li>
-            <li
-              className={`flex items-center cursor-pointer ${
-                activeContent === 'payment' ? 'text-blue-500' : ''
-              }`}
-              onClick={() => setActiveContent('payment')}
-            >
-              <Link to={routes.payment} className="button">
-                Payment
-              </Link>
-            </li>
-          </ul>
+          <NavBar />
         </div>
 
         {/* Content */}
         <div className="relative z-10 p-4 w-[100%] h-[90vh] flex items-center justify-center">
-          <div className="w-[80%] h-[80%] m-auto p-[50px] bg-white bg-opacity-30 backdrop-filter backdrop-blur shadow-xl shadow-gray-200 rounded-lg overflow-y-auto scrollbar-rounded">
+          <div className="lg:w-[80%] md:w-[85%] lg:h-[80%] md:h-[90%] m-auto p-[50px] bg-white bg-opacity-30 backdrop-filter backdrop-blur shadow-xl shadow-gray-200 rounded-lg overflow-y-auto scrollbar-rounded">
             <Routes>
               <Route path={routes.home} element={<Home />} />
               <Route path={routes.products} element={<Products />} />
