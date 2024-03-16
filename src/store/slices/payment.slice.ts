@@ -9,6 +9,7 @@ export const initialState = {
   product: {},
   creditCard: {},
   transaction: {},
+  currentStep: 1,
   loading: false,
   error: null,
 }
@@ -24,6 +25,7 @@ export type TStatePayment = {
     product: ProductCardProps
     creditCard: IFormValues
   }
+  currentStep: number
   loading: boolean
   error: string | null
 }
@@ -51,6 +53,9 @@ export const paymentSlice = createSlice({
     setError: (state, action) => {
       state.error = action.payload
     },
+    setCurrentStep: (state, action) => {
+      state.currentStep = action.payload
+    },
     reset: (state) => {
       state.product = {}
       state.creditCard = {}
@@ -59,6 +64,7 @@ export const paymentSlice = createSlice({
   },
 })
 
-export const { fillPayment, setLoading, setError, reset } = paymentSlice.actions
+export const { fillPayment, setLoading, setError, setCurrentStep, reset } =
+  paymentSlice.actions
 
 export default paymentSlice.reducer
