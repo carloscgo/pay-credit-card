@@ -1,64 +1,61 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { Some, httpAxios } from "../utils/httpAxios";
-import formatNumber from "../utils/formatNumber";
-import { ProductCardProps } from "../components/ProductCard";
+import { useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 
-type getProductsProps = {
-    setProducts: Dispatch<SetStateAction<ProductCardProps[]>>;
-    setLoading: Dispatch<SetStateAction<boolean>>;
-    setError: Dispatch<SetStateAction<null | string>>;
+import { Some, httpAxios } from '../utils/httpAxios'
+import formatNumber from '../utils/formatNumber'
+import {
+  fillProducts,
+  setLoading,
+  setError,
+} from '../store/slices/product.slice'
+import { AppDispatch, RootState } from '../store'
+
+const getProducts = async (dispatch: AppDispatch) => {
+  try {
+    const products = await httpAxios.get('/products')
+
+    if (products.length) {
+      dispatch(
+        fillProducts(
+          products.map((product: Some) => ({
+            id: product.id,
+            name: product.title,
+            price: formatNumber(product.price),
+            image: product.image,
+          }))
+        )
+      )
+    }
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      console.error(err.message)
+
+      dispatch(setError(err.message))
+    } else {
+      console.error('An unknown error occurred', err)
+
+      dispatch(setError('An unknown error occurred'))
+    }
+  } finally {
+    dispatch(setLoading(false))
+  }
 }
 
-const getProducts = async ({
-    setProducts,
-    setLoading,
-    setError,
-}: getProductsProps) => {
-    try {
-        const products = await httpAxios.get('/products');
-
-        if (products.length) {
-            setProducts(products.map((product: Some) => ({
-                name: product.title,
-                price: formatNumber(product.price),
-                image: product.image,
-            })));
-        }
-
-        setLoading(false);
-    } catch (err: unknown) { 
-        if (err instanceof Error) {
-            console.error(err.message);
-
-            setError(err.message);
-        } else {
-            console.error('An unknown error occurred', err);
-
-            setError('An unknown error occurred');
-        }
-
-        setLoading(false);
-    }
-};
-
 const useGetProducts = () => {
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<null | string>(null);
-    const [products, setProducts] = useState<ProductCardProps[]>([]);
+  const dispatch = useDispatch()
+  const { loading, error, products } = useSelector(
+    (state: RootState) => state.product
+  )
 
-    useEffect(() => {
-        getProducts({
-            setProducts,
-            setLoading,
-            setError,
-        });
-    }, []);
+  useEffect(() => {
+    !loading && getProducts(dispatch)
+  }, [dispatch, loading])
 
-    return {
-        loading,
-        error,
-        products,
-    };
-};
+  return {
+    loading,
+    error,
+    products,
+  }
+}
 
-export default useGetProducts;
+export default useGetProducts
