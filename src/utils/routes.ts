@@ -4,6 +4,8 @@ const routes = {
   home: '/',
   products: '/products',
   payment: '/payment',
+  summary: '/summary',
+  result: '/result',
 }
 
 export default routes

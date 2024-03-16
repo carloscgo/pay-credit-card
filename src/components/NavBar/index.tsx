@@ -55,16 +55,6 @@ const NavBar = () => {
             Products
           </Link>
         </li>
-        <li
-          className={`flex items-center cursor-pointer ${
-            activeContent === 'payment' ? 'text-blue-500' : ''
-          }`}
-          onClick={onSelectHandler('payment')}
-        >
-          <Link to={routes.payment} className="button">
-            Payment
-          </Link>
-        </li>
       </ul>
 
       {/* Vertical Menu for small/medium screens */}
@@ -91,16 +81,6 @@ const NavBar = () => {
         >
           <Link to={routes.products} className="button">
             Products
-          </Link>
-        </li>
-        <li
-          className={`flex items-center cursor-pointer ${
-            activeContent === 'payment' ? 'text-blue-500' : ''
-          }`}
-          onClick={onSelectHandler('payment')}
-        >
-          <Link to={routes.payment} className="button">
-            Payment
           </Link>
         </li>
       </ul>

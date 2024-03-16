@@ -1,7 +1,9 @@
 import { ETypeCreditCards } from '../../utils/detectTypeCreditCard'
 
+export type TypeCard = keyof typeof ETypeCreditCards | null
+
 export type CreditCardProps = {
-  type: keyof typeof ETypeCreditCards | null
+  type: TypeCard
   numberCard: string
   holderName: string
   expireDate: string
@@ -36,9 +38,9 @@ export const CreditCard = ({
           <rect rx="20" ry="20" fill="#fff" width="600" height="368" />
         </mask>
         <clipPath id="txtBoxes">
-          <rect className="txtBox" x="40" y="245" width="285" height="35" />
-          <rect className="txtBox" x="40" y="300" width="285" height="35" />
-          <rect className="txtBox" x="470" y="290" width="80" height="35" />
+          <rect className="txtBox" x="40" y="245" width="285" height="38" />
+          <rect className="txtBox" x="40" y="300" width="285" height="38" />
+          <rect className="txtBox" x="470" y="290" width="80" height="38" />
         </clipPath>
         <clipPath id="orbClip1">
           <circle cx="50" cy="410" r="105" />
@@ -104,13 +106,13 @@ export const CreditCard = ({
         />
         <g fill="#fff" strokeLinecap="round">
           <g clipPath="url(#txtBoxes)">
-            <text x="45" y="265" fontSize="28" style={{ whiteSpace: 'pre' }}>
+            <text x="45" y="268" fontSize="28" style={{ whiteSpace: 'pre' }}>
               {numberCard}
             </text>
-            <text x="45" y="320" fontSize="28" style={{ whiteSpace: 'pre' }}>
+            <text x="45" y="323" fontSize="28" style={{ whiteSpace: 'pre' }}>
               {holderName}
             </text>
-            <text x="470" y="320" fontSize="30" style={{ whiteSpace: 'pre' }}>
+            <text x="470" y="323" fontSize="30" style={{ whiteSpace: 'pre' }}>
               {expireDate}
             </text>
           </g>

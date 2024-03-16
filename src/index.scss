@@ -54,3 +54,7 @@ body * {
 .image-product {
   max-height: 300px;
 }
+
+.first-letter:capitalize::first-letter {
+  text-transform: uppercase;
+}

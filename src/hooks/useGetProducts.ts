@@ -2,7 +2,6 @@ import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { Some, httpAxios } from '../utils/httpAxios'
-import formatNumber from '../utils/formatNumber'
 import {
   fillProducts,
   setLoading,
@@ -20,7 +19,7 @@ const getProducts = async (dispatch: AppDispatch) => {
           products.map((product: Some) => ({
             id: product.id,
             name: product.title,
-            price: formatNumber(product.price),
+            price: product.price,
             image: product.image,
           }))
         )

@@ -3,26 +3,115 @@ import {
   FormEventHandler,
   MouseEvent,
   MouseEventHandler,
+  useEffect,
   useRef,
-  useState,
 } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useForm, SubmitHandler } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup'
+
 import getCardType from '../../utils/detectTypeCreditCard'
-import { CreditCard, CreditCardProps } from '../CreditCard'
+import { TStatePayment, fillPayment } from '../../store/slices/payment.slice'
+import { CreditCard, CreditCardProps, TypeCard } from '../CreditCard'
 import { Input, Label } from '../Form'
+import Button from '../Button'
+import { useNavigate } from 'react-router-dom'
+import { RootState } from '../../store'
+import routes from '../../utils/routes'
+
+export interface IFormValues {
+  type: string
+  numberCard: string
+  holderName: string
+  expireDate: string
+  ccv: string
+}
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const schema = yup
+  .object({
+    type: yup.string().required(),
+    numberCard: yup
+      .string()
+      .required('Number card is required.')
+      .when('type', (type: string[], schema) => {
+        const validations = {
+          diners: schema.max(17, 'Diners card must be at most 14 digits long.'),
+          amex: schema.max(18, 'Amex card must be at most 15 digits long.'),
+        }[type[0]?.toLowerCase()]
+
+        return (
+          validations || schema.max(19, 'Card must be at most 16 digits long.')
+        )
+      }),
+    holderName: yup.string().max(50).required('Card holder is required.'),
+    expireDate: yup
+      .string()
+      .min(5, 'Exp. date must be 4 characters')
+      .max(5)
+      .required('Exp. date card is required.'),
+    ccv: yup
+      .string()
+      .min(3, 'CCV must be 3 characters')
+      .max(3)
+      .required('CCV card is required.'),
+  })
+  .required()
 
 const Payment = () => {
+  const navigate = useNavigate()
+
+  const { product } = useSelector(
+    (state: RootState) => state.payment
+  ) as TStatePayment
+
+  const dispatch = useDispatch()
+
   const creditCardRef = useRef<HTMLDivElement>(null)
-  const inputCardNumberRef = useRef<HTMLInputElement>(null)
-  const inputCCVNumberRef = useRef<HTMLInputElement>(null)
-  const expirationDateRef = useRef<HTMLInputElement>(null)
-  const inputCardName = useRef<HTMLInputElement>(null)
-  const [creditCardData, setCreditCardData] = useState<CreditCardProps>({
-    type: null,
-    numberCard: '',
-    holderName: '',
-    expireDate: '',
-    ccv: '',
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    getValues,
+    formState: { errors, isValid },
+  } = useForm<IFormValues>({
+    defaultValues: {
+      type: '',
+      numberCard: '',
+      holderName: '',
+      expireDate: '',
+      ccv: '',
+    },
+    mode: 'onChange',
+    resolver: yupResolver(schema),
   })
+
+  useEffect(() => {
+    if (!product?.id) {
+      navigate(routes.home, {
+        replace: true,
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [product])
+
+  if (!product?.id) {
+    return null
+  }
+
+  const onSubmit: SubmitHandler<IFormValues> = (data) => {
+    dispatch(
+      fillPayment({
+        creditCard: data,
+      })
+    )
+
+    navigate(routes.summary, {
+      replace: true,
+    })
+  }
 
   const flipCard =
     (flip: string): MouseEventHandler<HTMLInputElement> =>
@@ -52,13 +141,7 @@ const Payment = () => {
     }
 
   const updateCreditCardData = (key: keyof CreditCardProps, value: string) => {
-    setCreditCardData((state: CreditCardProps) => {
-      if (state) {
-        return { ...state, [key]: value }
-      }
-
-      return state
-    })
+    setValue(key as keyof IFormValues, value)
   }
 
   const onInputCard: FormEventHandler<HTMLInputElement> = (
@@ -81,11 +164,7 @@ const Payment = () => {
       formattedInput += input[i]
     }
 
-    if (inputCardNumberRef.current) {
-      inputCardNumberRef.current.value = formattedInput
-
-      updateCreditCardData('numberCard', formattedInput)
-    }
+    updateCreditCardData('numberCard', formattedInput)
   }
 
   const onInputCVV: FormEventHandler<HTMLInputElement> = (
@@ -93,11 +172,7 @@ const Payment = () => {
   ): void => {
     const input = (event.target as HTMLInputElement).value.replace(/\D/g, '')
 
-    if (inputCCVNumberRef.current) {
-      inputCCVNumberRef.current.value = input
-
-      updateCreditCardData('ccv', input)
-    }
+    updateCreditCardData('ccv', input)
   }
 
   const onInputExpired: FormEventHandler<HTMLInputElement> = (
@@ -116,11 +191,7 @@ const Payment = () => {
       formattedInput += input[i]
     }
 
-    if (expirationDateRef.current) {
-      expirationDateRef.current.value = formattedInput
-
-      updateCreditCardData('expireDate', formattedInput)
-    }
+    updateCreditCardData('expireDate', formattedInput)
   }
 
   const onInputName: FormEventHandler<HTMLInputElement> = (
@@ -128,58 +199,72 @@ const Payment = () => {
   ): void => {
     const input = (event.target as HTMLInputElement).value
 
-    if (inputCardName.current) {
-      inputCardName.current.value = input
-
-      updateCreditCardData('holderName', input)
-    }
+    updateCreditCardData('holderName', input)
   }
 
   return (
-    <form className="bg-white mx-auto px-6 py-8 shadow-md rounded-md flex flex-wrap">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="bg-white mx-auto px-6 py-8 shadow-md rounded-md flex flex-wrap"
+    >
       <div className="w-full md:w-1/2 lg:pr-8 md:pr-0 lg:border-r-2 md:border-r-0 md:border-0 lg:border-slate-300">
         <Label>Card number:</Label>
         <Input
+          {...register('numberCard')}
           type="text"
-          ref={inputCardNumberRef}
           onClick={flipCard('flipToFront')}
           onInput={onInputCard}
+          error={errors.numberCard?.message}
           maxLength={19}
           placeholder="XXXX XXXX XXXX XXXX"
+          required
         />
         <div className="flex gap-x-2 mb-4">
           <div className="flex-1">
             <Label>Exp. date:</Label>
             <Input
-              ref={expirationDateRef}
+              {...register('expireDate')}
               type="text"
               onClick={flipCard('flipToFront')}
               onInput={onInputExpired}
+              error={errors.expireDate?.message}
               maxLength={5}
               placeholder="MM/YY"
+              required
             />
           </div>
           <div className="flex-1">
             <Label>CCV:</Label>
             <Input
-              ref={inputCCVNumberRef}
+              {...register('ccv')}
               type="text"
               onClick={flipCard('flipToRear')}
               onInput={onInputCVV}
+              error={errors.ccv?.message}
               maxLength={3}
               placeholder="123"
+              required
             />
           </div>
         </div>
 
         <Label>Card holder:</Label>
         <Input
-          ref={inputCardName}
+          {...register('holderName')}
           type="text"
           onClick={flipCard('flipToFront')}
           onInput={onInputName}
+          error={errors.holderName?.message}
+          maxLength={50}
           placeholder="John Doe"
+          required
         />
+
+        <div className="mt-2">
+          <Button as="button" type="submit" disabled={!isValid}>
+            Pay now
+          </Button>
+        </div>
       </div>
 
       <div className="w-full md:w-1/2 lg:pl-8 pt-8 md:pl-0">
@@ -196,10 +281,10 @@ const Payment = () => {
             >
               <CreditCard
                 className="relative object-cover w-full h-full rounded-xl"
-                type={creditCardData.type}
-                numberCard={creditCardData.numberCard}
-                holderName={creditCardData.holderName}
-                expireDate={creditCardData.expireDate}
+                type={getValues().type as TypeCard}
+                numberCard={getValues().numberCard}
+                holderName={getValues().holderName}
+                expireDate={getValues().expireDate}
               />
             </div>
             <div
@@ -220,7 +305,7 @@ const Payment = () => {
                     id="imageCCVNumber"
                     className="text-black flex items-center pl-4 pr-2 w-14 ml-auto"
                   >
-                    {creditCardData.ccv}
+                    {getValues().ccv}
                   </p>
                   <p className="text-white font-light flex justify-end text-sm mt-2">
                     security code
