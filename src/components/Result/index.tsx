@@ -1,8 +1,8 @@
 import { SVGProps, useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { RootState } from '../../store'
-import { TStatePayment } from '../../store/slices/payment.slice'
+import { TStatePayment, setCurrentStep } from '../../store/slices/payment.slice'
 import { StatusTransaction } from '../../hooks/usePayment'
 import routes from '../../utils/routes'
 import Button from '../Button'
@@ -46,11 +46,17 @@ const ExclamationCircleIcon = (props: IconProps) => (
 )
 
 const Result = () => {
+  const dispatch = useDispatch()
   const navigate = useNavigate()
 
   const { transaction } = useSelector(
     (state: RootState) => state.payment
   ) as TStatePayment
+
+  useEffect(() => {
+    dispatch(setCurrentStep(4))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useEffect(() => {
     if (!transaction?.id) {
@@ -77,14 +83,14 @@ const Result = () => {
       textColor: 'text-green-500',
       iconStyle: 'text-green-500',
       labelButton: 'Keep buying',
-      route: routes.payment,
+      route: routes.products,
     },
     [StatusTransaction.error]: {
       icon: ExclamationCircleIcon,
       textColor: 'text-red-500',
       iconStyle: 'text-red-500',
       labelButton: 'Try again payment',
-      route: routes.products,
+      route: routes.payment,
     },
   }
 

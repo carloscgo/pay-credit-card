@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import useGetProducts from '../../hooks/useGetProducts'
 import routes, { Link, Route, Routes } from '../../utils/routes'
 import NavBar from '../NavBar'
@@ -9,8 +10,11 @@ import Products from '../Products'
 import Payment from '../Payment'
 import Summary from '../Summary'
 import Result from '../Result'
+import StepBar from '../StepBar'
 
 const Layout = () => {
+  const location = useLocation()
+
   const [error, setError] = useState('')
 
   const { loading: loadingProducts, error: errorProducts } = useGetProducts()
@@ -40,8 +44,15 @@ const Layout = () => {
         </div>
 
         {/* Content */}
-        <div className="relative z-10 p-4 w-[100%] h-[90vh] flex items-center justify-center">
-          <div className="lg:w-[80%] md:w-[85%] lg:h-[80%] md:h-[90%] m-auto p-[50px] bg-white bg-opacity-30 backdrop-filter backdrop-blur shadow-xl shadow-gray-200 rounded-lg overflow-y-auto scrollbar-rounded">
+        <div className="relative z-10 p-4 w-[100%] lg:w-[calc(100%-50px)] h-[90vh] flex flex-col items-center justify-center">
+          {[
+            routes.products,
+            routes.payment,
+            routes.summary,
+            routes.result,
+          ].some((str) => location.pathname.includes(str)) && <StepBar />}
+
+          <div className="lg:w-[80%] w-[100%] lg:h-[80%] h-[90%] m-auto p-20px md:p-[50px] bg-white bg-opacity-30 backdrop-filter backdrop-blur shadow-xl shadow-gray-200 rounded-lg overflow-y-auto scrollbar-rounded">
             <Routes>
               <Route path={routes.home} element={<Home />} />
               <Route path={routes.products} element={<Products />} />

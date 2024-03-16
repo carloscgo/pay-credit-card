@@ -12,7 +12,11 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 
 import getCardType from '../../utils/detectTypeCreditCard'
-import { TStatePayment, fillPayment } from '../../store/slices/payment.slice'
+import {
+  TStatePayment,
+  fillPayment,
+  setCurrentStep,
+} from '../../store/slices/payment.slice'
 import { CreditCard, CreditCardProps, TypeCard } from '../CreditCard'
 import { Input, Label } from '../Form'
 import Button from '../Button'
@@ -87,6 +91,11 @@ const Payment = () => {
     mode: 'onChange',
     resolver: yupResolver(schema),
   })
+
+  useEffect(() => {
+    dispatch(setCurrentStep(2))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useEffect(() => {
     if (!product?.id) {

@@ -1,14 +1,15 @@
 import { useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { RootState } from '../../store'
-import { TStatePayment } from '../../store/slices/payment.slice'
+import { TStatePayment, setCurrentStep } from '../../store/slices/payment.slice'
 import routes from '../../utils/routes'
 import Button from '../Button'
 import usePayment from '../../hooks/usePayment'
 import formatNumber from '../../utils/formatNumber'
 
 const Summary = () => {
+  const dispatch = useDispatch()
   const navigate = useNavigate()
 
   const { product, creditCard } = useSelector(
@@ -19,6 +20,11 @@ const Summary = () => {
     product,
     creditCard,
   })
+
+  useEffect(() => {
+    dispatch(setCurrentStep(3))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useEffect(() => {
     if (!product?.id || !creditCard?.numberCard) {
