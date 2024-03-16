@@ -1,3 +1,11 @@
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+
+import Button from '../Button'
+import { fillPayment } from '../../store/slices/payment.slice'
+import routes from '../../utils/routes'
+import formatNumber from '../../utils/formatNumber'
+
 export type ProductCardProps = {
   id: number
   name: string
@@ -5,7 +13,25 @@ export type ProductCardProps = {
   image: string
 }
 
-const ProductCard = ({ name, price, image }: ProductCardProps) => {
+const ProductCard = ({ id, name, price, image }: ProductCardProps) => {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
+  const onSelect = () => {
+    dispatch(
+      fillPayment({
+        product: {
+          id,
+          name,
+          price,
+          image,
+        },
+      })
+    )
+
+    navigate(routes.payment)
+  }
+
   return (
     <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow ">
       <div className="w-100 h-[300px]">
@@ -24,14 +50,13 @@ const ProductCard = ({ name, price, image }: ProductCardProps) => {
         </a>
 
         <div className="flex items-center justify-between mt-4">
-          <span className="text-3xl font-bold text-gray-900 ">{price}</span>
+          <span className="text-3xl font-bold text-gray-900 ">
+            {formatNumber(price)}
+          </span>
 
-          <a
-            href="#"
-            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center "
-          >
+          <Button as="button" onClick={onSelect}>
             Buy now
-          </a>
+          </Button>
         </div>
       </div>
     </div>

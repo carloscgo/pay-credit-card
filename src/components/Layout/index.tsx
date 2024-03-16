@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react'
 import useGetProducts from '../../hooks/useGetProducts'
 import routes, { Link, Route, Routes } from '../../utils/routes'
+import NavBar from '../NavBar'
+import Loading from '../Loading'
+import ErrorMessage from '../ErrorMessage'
 import Home from '../Home'
 import Products from '../Products'
 import Payment from '../Payment'
-import Loading from '../Loading'
-import ErrorMessage from '../ErrorMessage'
-import NavBar from '../NavBar'
+import Summary from '../Summary'
+import Result from '../Result'
 
 const Layout = () => {
   const [error, setError] = useState('')
@@ -44,6 +46,8 @@ const Layout = () => {
               <Route path={routes.home} element={<Home />} />
               <Route path={routes.products} element={<Products />} />
               <Route path={routes.payment} element={<Payment />} />
+              <Route path={routes.summary} element={<Summary />} />
+              <Route path={routes.result} element={<Result />} />
               <Route path="*" element={<p>404</p>} />
             </Routes>
           </div>
