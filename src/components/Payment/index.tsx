@@ -8,6 +8,7 @@ import {
 } from 'react'
 import getCardType from '../../utils/detectTypeCreditCard'
 import { CreditCard, CreditCardProps } from '../CreditCard'
+import { Input, Label } from '../Form'
 
 const Payment = () => {
   const creditCardRef = useRef<HTMLDivElement>(null)
@@ -135,14 +136,11 @@ const Payment = () => {
   }
 
   return (
-    <form className="bg-white w-full max-w-3xl mx-auto px-6 py-8 shadow-md rounded-md flex">
-      <div className="w-1/2 pr-8 border-r-2 border-slate-300">
-        <label className="text-neutral-800 font-bold text-sm mb-2 block">
-          Card number:
-        </label>
-        <input
+    <form className="bg-white mx-auto px-6 py-8 shadow-md rounded-md flex flex-wrap">
+      <div className="w-full md:w-1/2 lg:pr-8 md:pr-0 lg:border-r-2 md:border-r-0 md:border-0 lg:border-slate-300">
+        <Label>Card number:</Label>
+        <Input
           type="text"
-          className="flex h-10 w-full rounded-md border-2 px-4 py-1.5 text-lg ring-offset-background focus-visible:outline-none focus-visible:border-purple-600 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mb-4"
           ref={inputCardNumberRef}
           onClick={flipCard('flipToFront')}
           onInput={onInputCard}
@@ -151,13 +149,10 @@ const Payment = () => {
         />
         <div className="flex gap-x-2 mb-4">
           <div className="flex-1">
-            <label className="text-neutral-800 font-bold text-sm mb-2 block">
-              Exp. date:
-            </label>
-            <input
-              type="text"
-              className="flex h-10 w-full rounded-md border-2 px-4 py-1.5 text-lg ring-offset-background focus-visible:outline-none focus-visible:border-purple-600 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mb-4"
+            <Label>Exp. date:</Label>
+            <Input
               ref={expirationDateRef}
+              type="text"
               onClick={flipCard('flipToFront')}
               onInput={onInputExpired}
               maxLength={5}
@@ -165,13 +160,10 @@ const Payment = () => {
             />
           </div>
           <div className="flex-1">
-            <label className="text-neutral-800 font-bold text-sm mb-2 block">
-              CCV:
-            </label>
-            <input
-              type="text"
-              className="flex h-10 w-full rounded-md border-2 px-4 py-1.5 text-lg ring-offset-background focus-visible:outline-none focus-visible:border-purple-600 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mb-4"
+            <Label>CCV:</Label>
+            <Input
               ref={inputCCVNumberRef}
+              type="text"
               onClick={flipCard('flipToRear')}
               onInput={onInputCVV}
               maxLength={3}
@@ -180,19 +172,17 @@ const Payment = () => {
           </div>
         </div>
 
-        <label className="text-neutral-800 font-bold text-sm mb-2 block">
-          Card holder:
-        </label>
-        <input
-          type="text"
-          className="flex h-10 w-full rounded-md border-2 px-4 py-1.5 text-lg ring-offset-background focus-visible:outline-none focus-visible:border-purple-600 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+        <Label>Card holder:</Label>
+        <Input
           ref={inputCardName}
+          type="text"
           onClick={flipCard('flipToFront')}
           onInput={onInputName}
           placeholder="John Doe"
         />
       </div>
-      <div className="w-1/2 pl-8 pt-8">
+
+      <div className="w-full md:w-1/2 lg:pl-8 pt-8 md:pl-0">
         <div className="w-full h-56" style={{ perspective: '1000px' }}>
           <div
             ref={creditCardRef}
