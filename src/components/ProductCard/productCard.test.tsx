@@ -60,11 +60,11 @@ describe('ProductCard Component', () => {
     )
   })
 
-  it('dispatches fillPayment and navigates to payment route when buy now is clicked', () => {
+  it('dispatches fillPayment and navigates to payment route when Pay with credit card is clicked', () => {
     const { getByText } = customRender(store)
 
-    // Simulate clicking the 'Buy now' button
-    fireEvent.click(getByText(/buy now/i))
+    // Simulate clicking the 'Pay with credit card' button
+    fireEvent.click(getByText(/Pay with credit card/i))
 
     // Assert that navigate function has been called with the correct route
     expect(navigate).toHaveBeenCalledWith('/payment')
