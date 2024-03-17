@@ -136,7 +136,6 @@ export const CreditCard = ({
 
       {type && (
         <image
-          // eslint-disable-next-line prettier/prettier
           data-testid="logo-card"
           href={`/icons/${type.toLowerCase()}.svg`}
           width="150"

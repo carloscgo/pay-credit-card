@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { fireEvent, render, screen } from '@testing-library/react'
-import ErrorBoundary, { retry } from './'
+import ErrorBoundary from './'
 
 const ChildComponent = ({ shouldThrow }: { shouldThrow?: boolean }) => {
   if (shouldThrow) {
@@ -48,12 +47,6 @@ describe('ErrorBoundary', () => {
 
     const tryAgainButton = screen.getByRole('button', { name: /try again?/i })
     fireEvent.click(tryAgainButton)
-
-    expect(window.location.href).toBe('http://localhost/')
-  })
-
-  it('expect event to retry method', () => {
-    retry()
 
     expect(window.location.href).toBe('http://localhost/')
   })

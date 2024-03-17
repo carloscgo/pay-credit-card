@@ -11,6 +11,7 @@ import Payment from '../Payment'
 import Summary from '../Summary'
 import Result from '../Result'
 import StepBar from '../StepBar'
+import NotFound from '../NotFound'
 
 const Layout = () => {
   const location = useLocation()
@@ -59,7 +60,7 @@ const Layout = () => {
               <Route path={routes.payment} element={<Payment />} />
               <Route path={routes.summary} element={<Summary />} />
               <Route path={routes.result} element={<Result />} />
-              <Route path="*" element={<p>404</p>} />
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </div>
         </div>

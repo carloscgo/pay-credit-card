@@ -49,13 +49,13 @@ const ProductCard = ({ id, name, price, image }: ProductCardProps) => {
           </h5>
         </a>
 
-        <div className="flex items-center justify-between mt-4">
+        <div className="flex flex-wrap items-center justify-between mt-4">
           <span className="text-3xl font-bold text-gray-900 ">
             {formatNumber(price)}
           </span>
 
           <Button as="button" onClick={onSelect}>
-            Buy now
+            Pay with credit card
           </Button>
         </div>
       </div>
