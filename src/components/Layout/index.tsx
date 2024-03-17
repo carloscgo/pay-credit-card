@@ -22,7 +22,7 @@ const Layout = () => {
   const loading = loadingProducts
 
   useEffect(() => {
-    errorProducts && setError(errorProducts)
+    setError(errorProducts || '')
   }, [errorProducts])
 
   const handleCloseError = () => {

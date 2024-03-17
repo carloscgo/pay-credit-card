@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { Some, httpAxios } from '../utils/httpAxios'
@@ -9,7 +9,12 @@ import {
 } from '../store/slices/product.slice'
 import { AppDispatch, RootState } from '../store'
 
-const getProducts = async (dispatch: AppDispatch) => {
+export const getProducts = async (
+  dispatch: AppDispatch,
+  setLoaded: (value: boolean) => void
+) => {
+  dispatch(setLoading(true))
+
   try {
     const products = await httpAxios.get('/products')
 
@@ -37,6 +42,7 @@ const getProducts = async (dispatch: AppDispatch) => {
     }
   } finally {
     dispatch(setLoading(false))
+    setLoaded(true)
   }
 }
 
@@ -45,10 +51,11 @@ const useGetProducts = () => {
   const { loading, error, products } = useSelector(
     (state: RootState) => state.product
   )
+  const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
-    !loading && getProducts(dispatch)
-  }, [dispatch, loading])
+    !loading && !loaded && getProducts(dispatch, setLoaded)
+  }, [dispatch, loading, loaded])
 
   return {
     loading,

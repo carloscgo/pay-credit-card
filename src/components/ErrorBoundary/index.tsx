@@ -1,34 +1,27 @@
 import React, { ReactNode } from 'react'
+import routes from '../../utils/routes'
 
 interface ComponentProps {
   children: ReactNode
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Some = any
-
 interface ComponentState {
   hasError: boolean
-  error: Some
+}
+
+export const retry = () => {
+  window.location.href = routes.home
 }
 
 class ErrorBoundary extends React.Component<ComponentProps, ComponentState> {
   constructor(props: ComponentProps) {
     super(props)
 
-    // Define a state variable to track whether is an error or not
-    this.state = { hasError: false, error: null }
+    this.state = { hasError: false }
   }
 
-  static getDerivedStateFromError(error: Some) {
-    // Update state so the next render will show the fallback UI
-
-    return { hasError: true, error }
-  }
-
-  componentDidCatch(error: Some, errorInfo: Some) {
-    // You can use your own error logging service here
-    console.log({ error, errorInfo })
+  static getDerivedStateFromError() {
+    return { hasError: true }
   }
 
   render() {
@@ -38,10 +31,7 @@ class ErrorBoundary extends React.Component<ComponentProps, ComponentState> {
       return (
         <div>
           <h2>Oops, there is an error!</h2>
-          <button
-            type="button"
-            onClick={() => this.setState({ hasError: false, error: null })}
-          >
+          <button type="button" onClick={retry}>
             Try again?
           </button>
         </div>
