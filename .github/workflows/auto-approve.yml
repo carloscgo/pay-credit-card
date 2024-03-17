@@ -21,11 +21,11 @@ jobs:
     - name: Check if PR title matches branch naming convention
       run: |
         branch_name=$(echo ${GITHUB_REF#refs/heads/})
+        approve='false'
         if [[ $branch_name == feature/* || $branch_name == hotfix/* || $branch_name == bugfix/* ]]; then
-          echo "::set-output name=approve::true"
-        else
-          echo "::set-output name=approve::false"
+          approve='true'
         fi
+        echo "approve=$approve" >> $GITHUB_ENV
       id: check_branch
 
     - name: Auto-approve if branch matches naming convention
