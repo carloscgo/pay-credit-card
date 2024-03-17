@@ -13,6 +13,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+
     - name: Check if PR title matches branch naming convention
       run: |
         branch_name=$(echo ${GITHUB_REF#refs/heads/})
