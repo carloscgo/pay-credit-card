@@ -53,6 +53,18 @@ Launches the test runner in the interactive watch mode using **@testing-library*
 npm run test
 ```
 
+For the payment process, a mock is used simulating the payment process, for this the following credit cards are used as valid, any other payment will be rejected
+
+Type Card    | Card 1           | Card 1           | Card 3
+-------------|------------------|------------------|-----------------
+MAESTRO      | 5018000000000000 | 5038000000000000 | 6390000000000000
+JCB          | 3528000000000000 | 3589000000000000 | 3529000000000000
+VISA         | 4916338506082832 | 4024007198964305 | 4716175187624512
+MASTERCARD   | 5280934283171080 | 5259474113320034 | 5442179619690834
+DISCOVER     | 6011894492395579 | 6011388644154687 | 6011880085013612
+AMEX         | 345936346788903  | 377669501013152  | 373083634595479
+DINERS CLUB  | 36163383666975   | 36341776399657   | 36342079574889
+
 ## Test coverage
 
 Reports test coverage.
@@ -62,7 +74,6 @@ npm run test:coverage
 ```
 
 ## Result coverage of unit test
-
 
 File           | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s                   
 ---------------|---------|----------|---------|---------|-------------------------------------
