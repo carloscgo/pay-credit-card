@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import useGetProducts from '../../hooks/useGetProducts'
 import ProductCard, { ProductCardProps } from '../ProductCard'
-import { setCurrentStep } from '../../store/slices/payment.slice'
+import { reset, setCurrentStep } from '../../store/slices/payment.slice'
 
 export type ProductsProps = {
   products: ProductCardProps[]
@@ -15,6 +15,7 @@ const Products = () => {
 
   useEffect(() => {
     dispatch(setCurrentStep(1))
+    dispatch(reset())
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

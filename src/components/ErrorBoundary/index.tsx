@@ -9,10 +9,6 @@ interface ComponentState {
   hasError: boolean
 }
 
-export const retry = () => {
-  window.location.href = routes.home
-}
-
 class ErrorBoundary extends React.Component<ComponentProps, ComponentState> {
   constructor(props: ComponentProps) {
     super(props)
@@ -24,6 +20,10 @@ class ErrorBoundary extends React.Component<ComponentProps, ComponentState> {
     return { hasError: true }
   }
 
+  retry() {
+    window.location.href = routes.home
+  }
+
   render() {
     // Check if the error is thrown
     if (this.state.hasError) {
@@ -31,7 +31,7 @@ class ErrorBoundary extends React.Component<ComponentProps, ComponentState> {
       return (
         <div>
           <h2>Oops, there is an error!</h2>
-          <button type="button" onClick={retry}>
+          <button type="button" onClick={this.retry}>
             Try again?
           </button>
         </div>
