@@ -3,7 +3,6 @@ This project is created using **vite**, **ReactJs**, **Redux**, **Typescript**, 
 
 [Project url deployed to AWS using Amplify](https://main.d1u117ql4a9s1t.amplifyapp.com/)
 
-
 ## Installation
 To install dependencies, run:
 
