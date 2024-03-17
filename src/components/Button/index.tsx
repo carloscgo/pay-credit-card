@@ -1,5 +1,5 @@
 type ButtonAsProps<E extends React.ElementType> = {
-  as: E
+  as?: E
   href?: string
 } & React.ComponentPropsWithoutRef<E>
 

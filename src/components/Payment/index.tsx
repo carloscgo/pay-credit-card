@@ -1,17 +1,9 @@
-import {
-  FormEvent,
-  FormEventHandler,
-  MouseEvent,
-  MouseEventHandler,
-  useEffect,
-  useRef,
-} from 'react'
+import { FormEvent, FormEventHandler, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 
-import getCardType from '../../utils/detectTypeCreditCard'
 import {
   TStatePayment,
   fillPayment,
@@ -23,6 +15,14 @@ import Button from '../Button'
 import { useNavigate } from 'react-router-dom'
 import { RootState } from '../../store'
 import routes from '../../utils/routes'
+import {
+  flipCardHandler,
+  onInputCVVHandler,
+  onInputCardHandler,
+  onInputExpiredHandler,
+  onInputNameHandler,
+  TRef,
+} from './services'
 
 export interface IFormValues {
   type: string
@@ -122,94 +122,27 @@ const Payment = () => {
     })
   }
 
-  const flipCard =
-    (flip: string): MouseEventHandler<HTMLInputElement> =>
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    (_event: MouseEvent<HTMLInputElement>) => {
-      const cardEl = creditCardRef.current
-
-      if (
-        flip === 'flipToRear' &&
-        !cardEl?.classList.contains('backIsVisible')
-      ) {
-        cardEl?.classList?.add('backIsVisible')
-      }
-      if (
-        flip === 'flipToFront' &&
-        cardEl?.classList.contains('backIsVisible')
-      ) {
-        cardEl?.classList.remove('backIsVisible')
-      }
-      if (flip === 'flip') {
-        if (cardEl?.classList.contains('backIsVisible')) {
-          cardEl?.classList.remove('backIsVisible')
-        } else {
-          cardEl?.classList.add('backIsVisible')
-        }
-      }
-    }
+  const flipCard = (flip: string) =>
+    flipCardHandler(flip, creditCardRef as TRef)
 
   const updateCreditCardData = (key: keyof CreditCardProps, value: string) => {
     setValue(key as keyof IFormValues, value)
   }
 
-  const onInputCard: FormEventHandler<HTMLInputElement> = (
-    event: FormEvent<HTMLInputElement>
-  ): void => {
-    const input = (event.target as HTMLInputElement).value.replace(/\D/g, '')
-
-    const typeCard = getCardType(input)
-
-    updateCreditCardData('type', typeCard as string)
-
-    // Add a space after every 4 digits
-    let formattedInput = ''
-
-    for (let i = 0; i < input.length; i++) {
-      if (i % 4 === 0 && i > 0) {
-        formattedInput += ' '
-      }
-
-      formattedInput += input[i]
-    }
-
-    updateCreditCardData('numberCard', formattedInput)
-  }
+  const onInputCard = (event: FormEvent<HTMLInputElement>): void =>
+    onInputCardHandler(event, updateCreditCardData)
 
   const onInputCVV: FormEventHandler<HTMLInputElement> = (
     event: FormEvent<HTMLInputElement>
-  ): void => {
-    const input = (event.target as HTMLInputElement).value.replace(/\D/g, '')
-
-    updateCreditCardData('ccv', input)
-  }
+  ): void => onInputCVVHandler(event, updateCreditCardData)
 
   const onInputExpired: FormEventHandler<HTMLInputElement> = (
     event: FormEvent<HTMLInputElement>
-  ): void => {
-    const input = (event.target as HTMLInputElement).value.replace(/\D/g, '')
-
-    // Add a '/' after the first 2 digits
-    let formattedInput = ''
-
-    for (let i = 0; i < input.length; i++) {
-      if (i % 2 === 0 && i > 0) {
-        formattedInput += '/'
-      }
-
-      formattedInput += input[i]
-    }
-
-    updateCreditCardData('expireDate', formattedInput)
-  }
+  ): void => onInputExpiredHandler(event, updateCreditCardData)
 
   const onInputName: FormEventHandler<HTMLInputElement> = (
     event: FormEvent<HTMLInputElement>
-  ): void => {
-    const input = (event.target as HTMLInputElement).value
-
-    updateCreditCardData('holderName', input)
-  }
+  ): void => onInputNameHandler(event, updateCreditCardData)
 
   return (
     <form
@@ -280,12 +213,12 @@ const Payment = () => {
         <div className="w-full h-56" style={{ perspective: '1000px' }}>
           <div
             ref={creditCardRef}
-            className="creditCard relative cursor-pointer transition-transform duration-500"
+            className="creditCard relative flex justify-center cursor-pointer transition-transform duration-500"
             style={{ transformStyle: 'preserve-3d' }}
             onClick={flipCard('flip')}
           >
             <div
-              className="w-full m-auto rounded-xl shadow-2xl absolute"
+              className="w-[320px] m-auto rounded-xl shadow-2xl absolute"
               style={{ backfaceVisibility: 'hidden' }}
             >
               <CreditCard
@@ -297,7 +230,7 @@ const Payment = () => {
               />
             </div>
             <div
-              className="w-full m-auto rounded-xl shadow-2xl absolute"
+              className="w-[320px] m-auto rounded-xl shadow-2xl absolute"
               style={{
                 backfaceVisibility: 'hidden',
                 transform: 'rotateY(180deg)',
@@ -309,10 +242,10 @@ const Payment = () => {
               />
 
               <div className="w-full absolute top-8">
-                <div className="px-8 mt-12">
+                <div className="px-5 mt-12 flex flex-col gap-y-4">
                   <p
                     id="imageCCVNumber"
-                    className="text-black flex items-center pl-4 pr-2 w-14 ml-auto"
+                    className="text-black flex items-center w-14 ml-auto"
                   >
                     {getValues().ccv}
                   </p>

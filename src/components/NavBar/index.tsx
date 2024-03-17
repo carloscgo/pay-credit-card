@@ -13,6 +13,7 @@ const NavBar = () => {
   return (
     <>
       <button
+        data-testid="menuitem"
         className="md:hidden text-gray-500 focus:outline-none"
         onClick={() => setIsMenuOpen(!isMenuOpen)}
       >

@@ -1,6 +1,6 @@
 const Home = () => {
   return (
-    <div className="container mx-auto px-4">
+    <main className="container mx-auto px-4">
       <div className="my-10">
         <h1 className="text-3xl font-bold text-center">
           Frontend Development Test
@@ -14,7 +14,7 @@ const Home = () => {
           transaction of a specific product and show the result of the process.
         </p>
       </div>
-    </div>
+    </main>
   )
 }
 
