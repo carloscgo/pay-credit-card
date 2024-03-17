@@ -1,6 +1,9 @@
 # Pay credit card
 This project is created using **vite**, **ReactJs**, **Redux**, **Typescript**, **TailwindCSS**. Here's how to use the available scripts to get started:
 
+[Project url deployed to AWS using Amplify](https://main.d1u117ql4a9s1t.amplifyapp.com/)
+
+
 ## Installation
 To install dependencies, run:
 
