@@ -1,49 +1,35 @@
 name: Auto-approve Pull Requests
 
 on:
-  pull_request:
+  pull_request_target:
     branches:
       - 'main'
 
+permissions:
+  pull-requests: write
+
 jobs:
   auto-approve:
+    if: github.actor == 'dependabot[bot]' || startsWith(github.head_ref, 'feature/') || startsWith(github.head_ref, 'hotfix/') || startsWith(github.head_ref, 'bugfix/')
     runs-on: ubuntu-latest
-
+  
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
     - name: Set up Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: '20'
 
-    - name: Check if PR title matches branch naming convention
-      run: |
-        branch_name=$(echo ${GITHUB_REF#refs/heads/})
-        approve='false'
-        if [[ $branch_name == feature/* || $branch_name == hotfix/* || $branch_name == bugfix/* ]]; then
-          approve='true'
-        fi
-        echo "approve=$approve" >> $GITHUB_ENV
-      id: check_branch
+    - name: Checkout code  
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.pull_request.head.sha }}
 
     - name: Auto-approve if branch matches naming convention
-      if: steps.check_branch.outputs.approve == 'true'
-      uses: actions/github-script@0.9.0
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        script: |
-          const { data: pullRequest } = await github.pulls.get({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            pull_number: context.issue.number
-          });
-          await github.pulls.createReview({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            pull_number: context.issue.number,
-            event: 'APPROVE',
-            body: 'Automatic approval of pull request based on branch naming convention.'
-          });
-
+      run: |
+        curl -L \
+          -X POST \
+          -H "Accept: application/vnd.github+json" \
+          -H 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
+          https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/reviews \
+          --data '{"event":"APPROVE", "body":"Automatic approval of pull request based on branch naming convention."}'
